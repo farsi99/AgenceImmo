@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}Welcome!{% endblock %}
+        </title>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet">
+        {% block stylesheets %}{% endblock %}
+
+    </head>
+    <body>
+        {% block header %}
+            {% if app.user %}
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <a class="navbar-brand" href="{{path('admin.property.index')}}">Administration</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item {% if curent_menu is defined and curent_menu == 'propreties' %} active {% endif %}">
+                                <a class="nav-link" href="{{path('admin.option.index')}}">Options
+                                    <span class="sr-only">(current)</span></a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                            <a class="navbar-brand" href="{{path('home')}}">Mon Agence</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav mr-auto">
+                                    <li class="nav-item {% if curent_menu is defined and curent_menu == 'propreties' %} active {% endif %}">
+                                        <a class="nav-link" href="{{path('proprety.index')}}">Acheter
+                                            <span class="sr-only">(current)</span></a>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                            {% if app.user %}
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a href="{{path('logout')}}" class="nav-link">Déconnexion</a>
+                                    </li>
+                                </ul>
+                            {% endif %}
+
+                        </div>
+                    </nav>
+                {% endblock %}
+                {% block body %}
+                    <div class="container"></div>
+                {% endblock %}
+                <script type="text/javascript" src="{{asset('js/jquery.js')}}"></script>
+                <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+                <script>
+                    $('select').select2();
+                </script>
+                {% block javascripts %}{% endblock %}
+
+            </body>
+        </html>

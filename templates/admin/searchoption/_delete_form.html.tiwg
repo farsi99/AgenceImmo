@@ -1,0 +1,5 @@
+ <form method="POST" action="{{path('admin.searchoption.delete', {'id': option.id})}}" style="display:inline-block" onsubmit="return confirm('Etest vous vraiment sûr ?')">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{csrf_token('delete'~option.id)}}">
+                        <input type="submit" value="Supprimer" class="btn btn-danger">
+                    </form>
