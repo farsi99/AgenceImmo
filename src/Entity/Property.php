@@ -7,12 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
- * @uniqueEntity(fields="title", message="Cet titre existe dejà")
+ * @Vich\Uploadable()
  */
 class Property
 {
@@ -26,6 +28,19 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     */
+    private $filename;
+
+    /**
+     * @var File|null
+     * @Assert\Image(mimeTypes="image/jpeg")
+     * @Vich\UploadableField(mapping="property_image", fileNameProperty="filename")
+     */
+    private $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -87,6 +102,11 @@ class Property
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -263,6 +283,18 @@ class Property
         return $this;
     }
 
+    public function getUpdatedAt() : ? \DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(? \DateTimeInterface $updated_at) : self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
@@ -282,6 +314,32 @@ class Property
         return $this;
     }
 
+
+    public function getFilename() : ? string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(? string $filename) : Property
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getimageFile() : ? File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(? File $imageFile) : Property
+    {
+        $this->imageFile = $imageFile;
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updated_at = new \Datetime('now');
+        }
+        return $this;
+    }
 
     /**
      * @return Collection|Searchoption[]

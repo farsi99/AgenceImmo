@@ -1,12 +1,20 @@
 <div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">
-            <a href="{{ path('property.show', {'id': property.id, slug: property.slug}) }}">
-                {{property.title}}</a>
-        </h5>
-        <p class="card-text">{{property.surface}}m² -
-            {{property.city}}({{property.postalcode}})</p>
-        <div class="text-primary" style="font-weight:bold; font-size:2em;">{{property.FormatedPrice}}
-            €</div>
-    </div>
-</div>
+    {% if property.filename %}
+        <img alt="cord-img-top" src="{{vich_uploader_asset(property,'imageFile')}}" style="width:100%; height:auto;">
+            {% else %}
+            <img alt="cord-img-top" src="{{asset('images/properties/empty.jpg')}}" style="width:100%; height:auto;">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ path('property.show', {'id': property.id, slug: property.slug}) }}">
+                        {{property.title}}</a>
+                </h5>
+                <p class="card-text">
+                    {{property.surface}}m² -
+                    {{property.city}}({{property.postalcode}})</p>
+                <div class="text-primary" style="font-weight:bold; font-size:2em;">
+                    {{property.FormatedPrice}}
+                    €</div>
+            </div>
+        </div>
+    

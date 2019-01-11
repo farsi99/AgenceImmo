@@ -11,6 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\PropertySearch;
 use App\Form\PropertySearchType;
+use App\Entity\Contact;
+use App\Form\ContactType;
+use App\Notification\ContactNotification;
 
 
 class PropretyController extends AbstractController
@@ -41,18 +44,35 @@ class PropretyController extends AbstractController
     /**
      * @Route("/biens/{slug}-{id}", name="property.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Property $property, $slug)
+    public function show(Property $property, $slug, Request $request, ContactNotification $notifiaion)
     {
+
+
         if ($property->getSlug() !== $slug) {
             return $this->redirectToRoute('property.show', [
                 'id' => $property->getId(),
                 'slug' => $property->getSlug()
             ], 301);
         }
+          //formulaire de contact
+        $contact = new Contact();
+        $contact->setProperty($property);
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $notifiaion->notify($contact);
+            $this->addFlash('success', 'Votre mail a bien été envoyé avec succès !');
+            $this->redirectToRoute('property.show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ]);
+        }
+          
        // $property=$property->find($id);
         return $this->render('property/show.html.twig', [
             'curent_menu' => 'propreties',
-            'property' => $property
+            'property' => $property,
+            'form' => $form->createView()
         ]);
     }
 }

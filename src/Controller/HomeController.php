@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Property;
 use App\Repository\PropertyRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/home",name="home")
+     * @Route("/",name="home")
      */
     public function index(PropertyRepository $repo, ObjectManager $manager, PaginatorInterface $paginator, Request $request)
     {
