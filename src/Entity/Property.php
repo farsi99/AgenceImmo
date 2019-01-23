@@ -8,13 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
- * @Vich\Uploadable()
  */
 class Property
 {
@@ -28,19 +25,6 @@ class Property
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", length=255)
-     */
-    private $filename;
-
-    /**
-     * @var File|null
-     * @Assert\Image(mimeTypes="image/jpeg")
-     * @Vich\UploadableField(mapping="property_image", fileNameProperty="filename")
-     */
-    private $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -118,6 +102,16 @@ class Property
      * @ORM\ManyToMany(targetEntity="App\Entity\Searchoption", inversedBy="properties")
      */
     private $searchoptions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="property", orphanRemoval=true, cascade={"persist"})
+     */
+    private $pictures;
+
+    /** 
+     * @var Array
+     */
+    private $pictureFiles;
 
     public function getId() : ? int
     {
@@ -299,6 +293,7 @@ class Property
     {
         $this->setCreatedAt(new \DateTime());
         $this->searchoptions = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
     }
 
 
@@ -311,33 +306,6 @@ class Property
     {
         $this->surface = $surface;
 
-        return $this;
-    }
-
-
-    public function getFilename() : ? string
-    {
-        return $this->filename;
-    }
-
-    public function setFilename(? string $filename) : Property
-    {
-        $this->filename = $filename;
-
-        return $this;
-    }
-
-    public function getimageFile() : ? File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(? File $imageFile) : Property
-    {
-        $this->imageFile = $imageFile;
-        if ($this->imageFile instanceof UploadedFile) {
-            $this->updated_at = new \Datetime('now');
-        }
         return $this;
     }
 
@@ -364,6 +332,68 @@ class Property
         if ($this->searchoptions->contains($searchoption)) {
             $this->searchoptions->removeElement($searchoption);
             $searchoption->removeProperty($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures() : Collection
+    {
+        return $this->pictures;
+    }
+
+    public function getPicture() : ? Picture
+    {
+        if (empty($this->pictures)) {
+            return null;
+        }
+        return $this->pictures[0];
+
+    }
+    public function addPicture(Picture $picture) : self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setProperty($this);
+        }
+
+        return $this;
+    }
+
+    /** 
+     * @return mixed
+     */
+    public function getPictureFiles()
+    {
+        return $this->pictureFiles;
+    }
+
+    /**
+     * @param mixed mixed $pictureFiles
+     * @return Property
+     */
+    public function setPictureFiles($pictureFiles) : self
+    {
+        foreach ($pictureFiles as $pictureFile) {
+            $picture = new Picture();
+            $picture->setImageFile($pictureFile);
+            $this->addPicture($picture);
+        }
+        $this->pictureFiles = $pictureFile;
+        return $this;
+    }
+
+    public function removePicture(Picture $picture) : self
+    {
+        if ($this->pictures->contains($picture)) {
+            $this->pictures->removeElement($picture);
+            // set the owning side to null (unless already changed)
+            if ($picture->getProperty() === $this) {
+                $picture->setProperty(null);
+            }
         }
 
         return $this;

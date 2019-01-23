@@ -13,8 +13,8 @@
             {% endif %}
             <div class="row">
                 <div class="col-md-8">
-                    {% if property.filename %}
-                        <img alt="cord-img-top" src="{{vich_uploader_asset(property,'imageFile')}}" style="width:100%; height:auto;">
+                    {% if property.picture %}
+                        <img alt="cord-img-top" src="{{vich_uploader_asset(property.picture,'imageFile')}}" style="width:100%; height:auto;">
                             {% else %}
                             <img alt="cord-img-top" src="{{asset('images/properties/empty.jpg')}}" style="width:100%; height:auto;">
                             {% endif %}

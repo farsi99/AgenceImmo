@@ -2,66 +2,41 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>
-            {% block title %}Welcome!{% endblock %}
-        </title>
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet">
-        {% block stylesheets %}{% endblock %}
-
-    </head>
-    <body>
-        {% block header %}
-            {% if app.user %}
-                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                    <a class="navbar-brand" href="{{path('admin.property.index')}}">Administration</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item {% if curent_menu is defined and curent_menu == 'propreties' %} active {% endif %}">
-                                <a class="nav-link" href="{{path('admin.option.index')}}">Options
-                                    <span class="sr-only">(current)</span></a>
-                            </li>
-                        </ul>
-                    {% else %}
+            <title>
+                {% block title %}Welcome!{% endblock %}
+            </title>
+            <link crossorigin="anonymous" href="{{ asset('css/bootstrap.min.css')}}" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+                    <link rel="stylesheet" href="{{ asset('build/app.css')}}">
+                        {% block stylesheets %}{% endblock %}
+                    </head>
+                    <body>
                         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-                            <a class="navbar-brand" href="{{path('home')}}">Mon Agence</a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <a class="navbar-brand" href="{{ path('home') }}">Mon Agence</a>
+                            <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
-
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav mr-auto">
-                                    <li class="nav-item {% if curent_menu is defined and curent_menu == 'propreties' %} active {% endif %}">
-                                        <a class="nav-link" href="{{path('proprety.index')}}">Acheter
-                                            <span class="sr-only">(current)</span></a>
-                                    </li>
-                                </ul>
-                            {% endif %}
-                            {% if app.user %}
-                                <ul class="navbar-nav">
                                     <li class="nav-item">
-                                        <a href="{{path('logout')}}" class="nav-link">Déconnexion</a>
+                                        <a class="nav-link {% if current_menu is defined and current_menu == 'properties' %}active{% endif %}" href="{{ path('proprety.index') }}">Acheter</a>
                                     </li>
                                 </ul>
-                            {% endif %}
-
-                        </div>
-                    </nav>
-                {% endblock %}
-                {% block body %}
-                    <div class="container"></div>
-                {% endblock %}
-                <script type="text/javascript" src="{{asset('js/jquery.js')}}"></script>
-                <script type="text/javascript" src="{{asset('js/bootstrap.min.js')}}"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
-                <script>
-                    $('select').select2();
-                </script>
-                {% block javascripts %}{% endblock %}
-
-            </body>
-        </html>
+                                {% if app.user %}
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a href="{{ path('logout') }}" class="nav-link">Se déconnecter</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </nav>
+                        {% block body %}{% endblock %}
+                        <script src="{{ asset('js/jquery.js')}}"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+                        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+                        <script src="{{ asset('build/app.js') }}"></script>
+                        {% block javascripts %}{% endblock %}
+                    </body>
+                </html>
+            
